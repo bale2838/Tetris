@@ -9,13 +9,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.font.FontRenderContext;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
 import com.bale.tetris.Shape.Tetrominoes;
+import com.bale.tetris.sound.Sound;
 
 public class Board extends JPanel implements ActionListener {
 	final int BoardWidth = 10;
@@ -58,6 +58,7 @@ public class Board extends JPanel implements ActionListener {
 	}
 	
 	public void restart(Tetris parent) {
+		Sound.test.play();
 		isStarted = true;
 		isFallingFinished = false;
 		numLinesRemoved = 0;
@@ -92,6 +93,7 @@ public class Board extends JPanel implements ActionListener {
 		if (!isStarted) 
 			return;
 
+		Sound.test.play();
 		isPaused = !isPaused;
 		if (isPaused) {
 			timer.stop();
@@ -314,6 +316,7 @@ public class Board extends JPanel implements ActionListener {
 				dropDown();
 				break;
 			case KeyEvent.VK_ENTER:
+				Sound.test.play();
 				isStarted = true;
 				break;
 			case KeyEvent.VK_ESCAPE:
