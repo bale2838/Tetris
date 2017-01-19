@@ -24,7 +24,7 @@ public class Board extends JPanel implements ActionListener {
 	boolean isFallingFinished = false;
 	boolean isStarted = false;
 	boolean isPaused = false;
-	String gameOverMsg = "GAME OVER";
+	String gameOverMsg = "PRESS [ESC] TO RESTART.";
 	int numLinesRemoved = 0;
 	int curX = 0;
 	int curY = 0;
@@ -68,6 +68,9 @@ public class Board extends JPanel implements ActionListener {
 		clearBoard();
 		newPiece();
 		repaint();
+		gameSpeed = 400;
+		timer = new Timer(gameSpeed, this);
+		statusbar.setText(String.valueOf(numLinesRemoved));
 		timer.start();
 	}
 
@@ -99,18 +102,30 @@ public class Board extends JPanel implements ActionListener {
 		}
 		repaint();
 	}
+	
+	private void newPiece() {
+		curPiece.setRandomShape();
+		curX = BoardWidth / 2 + 1;
+		curY = BoardHeight - 1 + curPiece.minY();
+
+		if (!tryMove(curPiece, curX, curY) || numLinesRemoved == 50) {
+			timer.stop();
+			isStarted = false;
+			statusbar.setText(gameOverMsg);
+		}
+	}
 
 	public void paint(Graphics g) {
-		if (!isStarted) {
+		if (!isStarted && !statusbar.getText().equals(gameOverMsg)) {
 			Font font  = new Font("Tahoma", Font.BOLD, 15);
 			FontMetrics metrics = g.getFontMetrics(font);
 			g.setFont(font);
 
 			String msg = "TETRIS";
-			g.drawString(msg, this.WIDTH/2 + 60, 150);
+			g.drawString(msg, this.WIDTH / 2 + 60, 150);
 
 			msg = "Press Enter to Play";
-			g.drawString(msg, this.WIDTH/2 + 20, 200);
+			g.drawString(msg, this.WIDTH / 2 + 20, 200);
 			
 		} else {
 			super.paint(g);
@@ -185,19 +200,6 @@ public class Board extends JPanel implements ActionListener {
 
 		if (!isFallingFinished) {
 			newPiece();
-		}
-	}
-
-	private void newPiece() {
-		curPiece.setRandomShape();
-		curX = BoardWidth / 2 + 1;
-		curY = BoardHeight - 1 + curPiece.minY();
-
-		if (!tryMove(curPiece, curX, curY) || numLinesRemoved == 50) {
-			curPiece.setShape(Tetrominoes.NoShape);
-			timer.stop();
-			isStarted = false;
-			statusbar.setText(gameOverMsg);
 		}
 	}
 
